@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCollection } from "@/lib/mongodb";
+import type { Document } from "mongodb";
 
 export const dynamic = "force-dynamic";
 
@@ -21,15 +22,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
     }
 
-    const enquiries = await getCollection<{
-      name: string;
-      email: string;
-      phone: string;
-      course?: string;
-      city: string;
-      createdAt: Date;
-      source?: string;
-    }>("enquiries");
+  type EnquiryDoc = Document & {
+  name: string;
+  email: string;
+  phone: string;
+  course?: string;
+  city: string;
+  createdAt: Date;
+  source?: string;
+};
+
+const enquiries = await getCollection<EnquiryDoc>("enquiries");
 
     await enquiries.insertOne({
       name,
