@@ -16,12 +16,18 @@ interface Highlight {
   desc: string;
 }
 
-interface Program {
+type Program = {
   tag: string;
   title: string;
-  badge: string;
+  badge?: string;   // optional
+  image: string;
+  duration: string;
+};
+
+interface Accreditations {
+  img: string;
   bg: string;
-}
+};
 
 interface WhyAmityItem {
   icon: string;
@@ -30,6 +36,8 @@ interface WhyAmityItem {
 }
 
 interface Testimonial {
+ 
+  image: string;
   name: string;
   role: string;
   text: string;
@@ -80,16 +88,76 @@ const highlights: Highlight[] = [
 ];
 
 const programs: Program[] = [
-  { tag: "PG PROGRAM", title: "Master of Business Administration", badge: "🔥 POPULAR", bg: "from-blue-900 to-blue-700" },
-  { tag: "UG PROGRAM", title: "Bachelor of Computer Applications", badge: "", bg: "from-slate-800 to-slate-600" },
-  { tag: "TOP UG PROGRAM", title: "Bachelor of Business Administration", badge: "⭐ TOP", bg: "from-indigo-900 to-indigo-700" },
-  { tag: "PG PROGRAM", title: "Master of Computer Applications", badge: "", bg: "from-blue-800 to-blue-600" },
-  { tag: "UG PROGRAM", title: "MBA With Dual Specialization", badge: "", bg: "from-slate-700 to-slate-500" },
-  { tag: "PG PROGRAM", title: "BBA + MBA Degree Program", badge: "", bg: "from-indigo-800 to-indigo-600" },
-  { tag: "UG PROGRAM", title: "B.Com + MBA Degree Program", badge: "", bg: "from-blue-900 to-blue-700" },
-  { tag: "UG PROGRAM", title: "BCA + MCA Degree Program", badge: "", bg: "from-slate-800 to-slate-600" },
-  { tag: "UG PROGRAM", title: "MBA with Specialization in Travel and Tourism Management", badge: "", bg: "from-indigo-900 to-indigo-700" },
-  { tag: "PG PROGRAM", title: "Master of Commerce (Financial Management)", badge: "", bg: "from-blue-800 to-blue-600" },
+  {
+    tag: "PG PROGRAM",
+    title: "Master of Business Administration",
+    badge: "🔥 POPULAR",
+    image: "/mba.webp",
+    duration: "02 Years",
+  },
+  {
+    tag: "UG PROGRAM",
+    title: "Bachelor of Computer Applications",
+    badge: "",
+    image: "/bca.webp",
+    duration: "03 Years",
+  },
+  {
+    tag: "TOP UG PROGRAM",
+    title: "Bachelor of Business Administration",
+    badge: "⭐ TOP",
+    image: "/bba.webp",
+    duration: "03 Years",
+  },
+  {
+    tag: "PG PROGRAM",
+    title: "Master of Computer Applications",
+    badge: "",
+    image: "/mca.webp",
+    duration: "02 Years",
+  },
+  {
+    tag: "UG PROGRAM",
+    title: "MBA With Dual Specialization",
+    badge: "",
+    image: "/mbaindual.webp",
+    duration: "02 Years",
+  },
+  {
+    tag: "PG PROGRAM",
+    title: "BBA + MBA Degree Program",
+    badge: "",
+    image: "/bba+mba.jpg",
+    duration: "05 Years",
+  },
+  {
+    tag: "UG PROGRAM",
+    title: "B.Com + MBA Degree Program",
+    badge: "",
+    image: "/B_com_MBA.jpg",
+    duration: "05 Years",
+  },
+  {
+    tag: "UG PROGRAM",
+    title: "BCA + MCA Degree Program",
+    badge: "",
+    image: "/bca+mca.jpg",
+    duration: "05 Years",
+  },
+  {
+    tag: "UG PROGRAM",
+    title: "BBA with Specialization in Travel and Tourism Management",
+    badge: "",
+    image: "/BBA_TAT.webp",
+    duration: "03 Years",
+  },
+  {
+    tag: "PG PROGRAM",
+    title: "Master of Commerce (Financial Management)",
+    badge: "",
+    image: "/MComfm.webp",
+    duration: "02 Years",
+  },
 ];
 
 const faqs: string[] = [
@@ -105,28 +173,30 @@ const faqs: string[] = [
 ];
 
 const whyAmity: WhyAmityItem[] = [
-  { icon: "✅", title: "WASC Accreditation", desc: "Internationally recognized accreditation ensuring global quality standards." },
-  { icon: "🏆", title: "NBA Recognition", desc: "National Board of Accreditation recognition for technical programs." },
-  { icon: "📊", title: "QS Ranked Online", desc: "Ranked among top online universities globally by QS Rankings." },
-  { icon: "🌐", title: "GAA (UK) Accreditation", desc: "Global Accreditation from UK ensuring international program standards." },
-  { icon: "📰", title: "Times Higher Employability Rankings", desc: "Consistently ranked high in graduate employability rankings." },
-  { icon: "🎪", title: "Pan-India Campus Placement Events", desc: "Regular placement drives across all major cities in India." },
-  { icon: "🤖", title: "Amigo: Learning On Mobile", desc: "AI-powered mobile learning assistant available 24/7." },
-  { icon: "👨‍🏫", title: "Prof. Ask: Your AI Career Tutor", desc: "Personal AI tutor to guide your academic and career journey." },
-  { icon: "🔧", title: "Industry Certifications for Better Employability", desc: "Free industry certifications bundled with every program." },
-  { icon: "💼", title: "Internship Discovery Platform", desc: "Exclusive internship portal with 500+ partner companies." },
-  { icon: "🚀", title: "AI-Powered Career Discovery Platform", desc: "Smart career matching based on your skills and interests." },
-  { icon: "📱", title: "AmicusApp for Campus Life", desc: "Stay connected with campus events, alumni and peers." },
+  { icon: "", title: "WASC Accreditation", desc: "Internationally recognized accreditation ensuring global quality standards." },
+  { icon: "", title: "NBA Recognition", desc: "National Board of Accreditation recognition for technical programs." },
+  { icon: "", title: "QS Ranked Online", desc: "Ranked among top online universities globally by QS Rankings." },
+  { icon: "", title: "GAA (UK) Accreditation", desc: "Global Accreditation from UK ensuring international program standards." },
+  { icon: "", title: "Times Higher Employability Rankings", desc: "Consistently ranked high in graduate employability rankings." },
+  { icon: "", title: "Pan-India Campus Placement Events", desc: "Regular placement drives across all major cities in India." },
+  { icon: "", title: "Amigo: Learning On Mobile", desc: "AI-powered mobile learning assistant available 24/7." },
+  { icon: "", title: "Prof. Ask: Your AI Career Tutor", desc: "Personal AI tutor to guide your academic and career journey." },
+  { icon: "", title: "Industry Certifications for Better Employability", desc: "Free industry certifications bundled with every program." },
+  { icon: "", title: "Internship Discovery Platform", desc: "Exclusive internship portal with 500+ partner companies." },
+  { icon: "", title: "AI-Powered Career Discovery Platform", desc: "Smart career matching based on your skills and interests." },
+  { icon: "", title: "AmicusApp for Campus Life", desc: "Stay connected with campus events, alumni and peers." },
 ];
 
 const testimonials: Testimonial[] = [
   {
-    name: "Abhishek Praffar Abdul Hamed",
+    name: "Ajimsha Puthur Abdul Hameed",
+    image: "/1.webp",
     role: "MBA Graduate",
     text: "Amity Online gave me the flexibility to complete my MBA while working full-time. The faculty support and industry connections were exceptional.",
   },
   {
     name: "Himansha Chadhha",
+    image: "/2.webp",
     role: "BCA Graduate",
     text: "The live sessions, recorded lectures and project-based learning made this an amazing experience. I got placed before even completing my degree!",
   },
@@ -225,28 +295,34 @@ export default function AmityOnlinePage(): React.ReactElement {
       style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}
     >
       {/* ── NAVBAR ── */}
-      <nav className="bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 rounded shadow-md sticky top-0 z-50 border-b-2 border-yellow-400">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-           <Image
-              src="/amity_logo.png"   
-                alt="Amity Online"
-                width={140}
-                height={40}
-                className="object-contain"
-                priority
-                />
-              </div>
-          <button onClick={handleOpenEnquiry} className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-5 py-2 rounded-full text-sm transition-all shadow-md hover:shadow-lg">
-            Enquire Now →
-          </button>
-        </div>
-      </nav>
+     <nav className="bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 rounded-b-2xl shadow-md border-b-2 border-yellow-400">
+  <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+
+    <div className="flex items-center gap-2">
+      <Image
+        src="/amity_logo.png"
+        alt="Amity Online"
+        width={140}
+        height={40}
+        className="object-contain"
+        priority
+      />
+    </div>
+
+    <button
+      onClick={handleOpenEnquiry}
+      className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-5 py-2 rounded-full text-sm transition-all shadow-md hover:shadow-lg"
+    >
+      Enquire Now →
+    </button>
+
+  </div>
+</nav>
 
       {/* ── HERO ── */}
-     <section className="relative bg-white overflow-hidden">
+    <section className="relative bg-white overflow-hidden">
 
-  {/* Frame Image Background */}
+  {/* Background Frame */}
   <img
     src="/amity_frame.png"
     alt="Frame"
@@ -254,45 +330,35 @@ export default function AmityOnlinePage(): React.ReactElement {
   />
 
   {/* Content */}
-  <div className="relative max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center z-10">
+  <div className="relative max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center z-10">
 
-    {/* Left */}
-    <div className="max-w-lg">
+    {/* LEFT SIDE (Image + Text mobile ke liye) */}
+    <div className="flex flex-col md:block">
 
-  <div className="inline-block bg-yellow-400 text-blue-900 text-[10px] font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wider">
-    🌍 Global Online Learning
-  </div>
+      {/* Image - Mobile me show first */}
+      <div className="md:hidden w-full mb-4">
+        <img
+          src="/amity_frame.png"
+          alt="Amity"
+          className="w-full h-auto object-contain"
+        />
+      </div>
 
-  <h1 className="text-xl md:text-2xl lg:text-4xl font-bold leading-snug mb-3 text-blue-900">
-    Unlock Global Learning With Our{" "}
-    <span className="text-yellow-500">Innovative Online</span>{" "}
-    Degree Programs
-  </h1>
+      {/* Text */}
+      <div className="max-w-lg">
+        <h1 className="text-xl md:text-2xl lg:text-4xl font-bold leading-snug text-blue-900">
+          Unlock global learning with our innovative online degree programs
+        </h1>
+      </div>
+    </div>
 
-  <p className="text-blue-900 text-sm md:text-base mb-5 leading-relaxed">
-    UGC-entitled degrees from India&apos;s top-ranked university. Learn at your pace, anywhere in the world.
-  </p>
-
-  <div className="flex flex-wrap gap-3">
-    <button className="bg-blue-900 text-white font-semibold px-5 py-2.5 rounded-full hover:bg-blue-800 transition-all shadow-md text-sm">
-      Explore Programs
-    </button>
-
-    <button
-      onClick={handleOpenEnquiry}
-      className="border-2 border-blue-900 text-blue-900 px-5 py-2.5 rounded-full hover:bg-blue-900 hover:text-white transition-all font-semibold text-sm"
-    >
-      Talk to an Expert
-    </button>
-  </div>
-
-</div>
-
-    {/* Right - Connect Form */}
+    {/* RIGHT SIDE FORM */}
     <div className="bg-white rounded-2xl p-5 shadow-xl text-gray-800 max-w-md w-full ml-auto">
+
       <h3 className="text-blue-900 font-bold text-xl mb-1">
         Connect With Our Experts
       </h3>
+
       <p className="text-gray-500 text-sm mb-4">
         Get free counselling in just a few steps
       </p>
@@ -439,36 +505,70 @@ export default function AmityOnlinePage(): React.ReactElement {
   </div>
 </section>
       {/* ── PROGRAMS ── */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-2">
-            Explore Our Online Degree Programs
-          </h2>
-          <p className="text-gray-500 text-sm mb-10">
-            Choose from a wide range of UGC-entitled programs designed for working professionals
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {programs.map((p: Program) => (
-              <div
-                key={p.title}
-                className={`bg-gradient-to-br ${p.bg} rounded-2xl p-6 text-white relative overflow-hidden hover:scale-105 transition-all cursor-pointer shadow-lg`}
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -translate-y-8 translate-x-8" />
-                {p.badge && (
-                  <span className="inline-block bg-yellow-400 text-blue-900 text-xs font-bold px-2 py-0.5 rounded-full mb-3">
-                    {p.badge}
-                  </span>
-                )}
-                <div className="text-blue-300 text-xs font-bold uppercase tracking-widest mb-2">{p.tag}</div>
-                <h3 className="font-bold text-lg leading-tight mb-4">{p.title}</h3>
-                <button onClick={handleOpenEnquiry} className="bg-white text-blue-900 text-xs font-bold px-4 py-2 rounded-full hover:bg-yellow-400 transition-all">
-                  Know More →
-                </button>
+      <section className="py-16 bg-gray-100">
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-2">
+      Explore Our Online Degree Programs
+    </h2>
+
+    <p className="text-gray-500 text-sm mb-10">
+      Choose from a wide range of UGC-entitled programs designed for working professionals
+    </p>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {programs.map((p: Program) => (
+        <div
+          key={p.title}
+          className="rounded-2xl overflow-hidden shadow-lg bg-blue-900 text-white hover:scale-105 transition-all flex flex-col"
+        >
+          
+          {/* IMAGE */}
+          <div className="relative">
+            <img
+              src={p.image}
+              alt={p.title}
+              className="w-full h-52 object-cover"
+            />
+
+            {p.badge && (
+              <div className="absolute bottom-0 left-0 bg-yellow-400 text-blue-900 text-xs font-bold px-4 py-1">
+                {p.badge}
               </div>
-            ))}
+            )}
+          </div>
+
+          {/* CONTENT */}
+          <div className="p-6 relative flex flex-col flex-grow">
+            <div className="text-blue-300 text-xs font-bold uppercase tracking-widest mb-2">
+              {p.tag}
+            </div>
+
+            <h3 className="font-semibold text-xl leading-snug mb-6">
+              {p.title}
+            </h3>
+
+            {/* BUTTON */}
+            <button
+              onClick={handleOpenEnquiry}
+              className="mt-auto flex items-center gap-2 text-sm font-semibold text-yellow-300 hover:text-yellow-400 transition"
+            >
+              More Info
+              <span className="text-lg">→</span>
+            </button>
+
+            {/* Duration */}
+            <div className="absolute right-6 bottom-6 text-right">
+              <div className="text-2xl font-bold">
+                {p.duration.split(" ")[0]}
+              </div>
+              <div className="text-xs opacity-80">YEARS</div>
+            </div>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── CTA BANNER ── */}
       <section className="bg-gradient-to-r from-blue-950 to-blue-800 py-14 text-white text-center relative overflow-hidden">
@@ -495,36 +595,57 @@ export default function AmityOnlinePage(): React.ReactElement {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 text-center mb-2">
-            Hear From Our Students
-          </h2>
-          <p className="text-gray-500 text-center text-sm mb-10">
-            Discover real stories of transformation and placement success
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {testimonials.map((t: Testimonial) => (
-              <div
-                key={t.name}
-                className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200"
-              >
-                <div className="flex text-yellow-400 text-xl mb-3">{"⭐".repeat(5)}</div>
-                <p className="text-gray-700 text-sm leading-relaxed mb-4 italic">&quot;{t.text}&quot;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center text-white font-bold">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <div className="font-bold text-blue-900 text-sm">{t.name}</div>
-                    <div className="text-gray-500 text-xs">{t.role}</div>
-                  </div>
+     <section className="py-16 bg-white">
+  <div className="max-w-6xl mx-auto px-4">
+
+    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 text-center mb-2">
+      Hear From Our Students
+    </h2>
+
+    <p className="text-gray-500 text-center text-sm mb-12">
+      Discover real stories of transformation and placement success
+    </p>
+
+    <div className="space-y-10">
+      {testimonials.map((t: Testimonial) => (
+        <div
+          key={t.name}
+          className="border border-blue-200 rounded-2xl overflow-hidden bg-gray-50 shadow-sm hover:shadow-lg transition-all"
+        >
+          <div className="flex flex-col md:flex-row items-stretch">
+
+            {/* IMAGE */}
+            <div className="md:w-1/3 w-full h-64 md:h-auto">
+              <img
+                src={t.image}
+                alt={t.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* TEXT */}
+            <div className="md:w-2/3 w-full p-6 md:p-10 flex flex-col justify-center text-center md:text-left">
+              <p className="text-gray-700 leading-relaxed mb-6 text-sm md:text-base italic">
+                "{t.text}"
+              </p>
+
+              <div>
+                <div className="inline-block bg-blue-600 text-white px-4 py-1 text-lg font-semibold rounded">
+                  {t.name}
+                </div>
+                <div className="text-gray-500 text-sm mt-2">
+                  {t.role}
                 </div>
               </div>
-            ))}
+            </div>
+
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* ── FAQ ── */}
       <section className="py-16 bg-gray-50">
@@ -586,62 +707,30 @@ export default function AmityOnlinePage(): React.ReactElement {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-blue-950 text-white py-10">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-             <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-           <Image
-              src="/amity_logo.png"   
-                alt="Amity Online"
-                width={140}
-                height={40}
-                className="object-contain"
-                priority
-                />
-              </div>
-          <button onClick={handleOpenEnquiry} className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-5 py-2 rounded-full text-sm transition-all shadow-md hover:shadow-lg">
-            Enquire Now →
-          </button>
-        </div>
-            <p className="text-blue-300 text-sm leading-relaxed">
-              India&apos;s leading online university offering UGC-entitled degrees with global recognition and
-              100% placement support.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-bold text-yellow-400 mb-3">Quick Links</h4>
-            <ul className="space-y-2 text-blue-300 text-sm">
-              {quickLinks.map((link: string) => (
-                <li key={link} className="hover:text-white cursor-pointer transition-colors">
-                  {link}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-yellow-400 mb-3">Contact Us</h4>
-            <div className="text-blue-300 text-sm space-y-2">
-              <p>📞 7042646766</p>
-              <p>📧 degreeuniversity.online </p>
-              <p>🌐 degreeuniversity.online </p>
-              <div className="flex gap-3 mt-4">
-                {socialLinks.map((s: string) => (
-                  <div
-                    key={s}
-                    className="w-8 h-8 bg-blue-800 hover:bg-yellow-400 hover:text-blue-900 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer transition-all"
-                  >
-                    {s}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="border-t border-blue-800 mt-8 pt-5 text-center text-blue-400 text-xs">
-          © 2024 Amity University Online. All Rights Reserved. | Privacy Policy | Terms &amp; Conditions
-        </div>
-      </footer>
+      <footer className="bg-gray-100 text-gray-600 text-center text-sm py-10 px-4">
+  
+  {/* Disclaimer */}
+  <p className="max-w-5xl mx-auto leading-relaxed">
+    Disclaimer: We act as a marketing service partner only. Amity University holds full rights to request change or removal of any non-relevant content. Images used are for illustrative purposes and do not directly represent the respective colleges or universities.
+  </p>
+
+  {/* Links */}
+  <div className="mt-6 space-x-2">
+    <a href="/privacy-policy" className="hover:text-blue-900 transition">
+      Privacy Policy
+    </a>
+    <span>&</span>
+    <a href="/terms" className="hover:text-blue-900 transition">
+      terms-conditions
+    </a>
+  </div>
+
+  {/* Copyright */}
+  <p className="mt-4 text-gray-500">
+    © 2025 degreeadmission.online - All Right Reserved.
+  </p>
+
+</footer>
       {/* ── ENQUIRY MODAL ── */}
       {showEnquiry && (
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
