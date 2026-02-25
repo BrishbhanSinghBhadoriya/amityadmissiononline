@@ -320,23 +320,30 @@ export default function AmityOnlinePage(): React.ReactElement {
 </nav>
 
       {/* ── HERO ── */}
-    <section className="relative bg-white overflow-hidden">
+   <section className="relative bg-white overflow-hidden">
 
-  {/* Background Frame */}
+  {/* Background Frame - Desktop only */}
   <img
     src="/amity_frame.png"
     alt="Frame"
-    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+    className="hidden md:block absolute inset-0 w-full h-full object-contain pointer-events-none"
   />
 
   {/* Content */}
   <div className="relative max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center z-10">
 
-    {/* LEFT SIDE (Image + Text mobile ke liye) */}
+    {/* LEFT SIDE */}
     <div className="flex flex-col md:block">
 
-      {/* Image - Mobile me show first */}
-      <div className="md:hidden w-full mb-4">
+      {/* Mobile: Text UPAR, Image NICHE - No Overlap */}
+      <div className="md:hidden w-full">
+        
+        {/* Text - image se upar, alag */}
+        <h1 className="text-base font-bold leading-snug text-blue-900 mb-3 px-1">
+          Unlock global learning with our innovative online degree programs
+        </h1>
+
+        {/* Image - text ke niche */}
         <img
           src="/amity_frame.png"
           alt="Amity"
@@ -344,8 +351,8 @@ export default function AmityOnlinePage(): React.ReactElement {
         />
       </div>
 
-      {/* Text */}
-      <div className="max-w-lg">
+      {/* Desktop: Normal Text only */}
+      <div className="hidden md:block max-w-lg">
         <h1 className="text-xl md:text-2xl lg:text-4xl font-bold leading-snug text-blue-900">
           Unlock global learning with our innovative online degree programs
         </h1>
@@ -411,6 +418,7 @@ export default function AmityOnlinePage(): React.ReactElement {
 
   </div>
 </section>
+
 
       {/* ── STATS ── */}
      <section className="bg-white py-10">
