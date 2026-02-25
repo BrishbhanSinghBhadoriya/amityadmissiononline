@@ -20,7 +20,9 @@ export async function getDb(): Promise<Db> {
   return db;
 }
 
-export async function getCollection<T = unknown>(name: string): Promise<Collection<T>> {
+export async function getCollection<T extends Document = Document>(
+  name: string
+): Promise<Collection<T>> {
   const db = await getDb();
   return db.collection<T>(name);
 }
