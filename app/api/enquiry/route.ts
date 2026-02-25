@@ -7,18 +7,11 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
-    const { name, email, phone, course, city } = body ?? {};
+    const { name, email, phone, course, city, state, qualification, source } = body ?? {};
 
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !city ||
-      typeof name !== "string" ||
-      typeof email !== "string" ||
-      typeof phone !== "string" ||
-      typeof city !== "string"
-    ) {
+    const location: string | undefined = typeof city === "string" ? city : typeof state === "string" ? state : undefined;
+
+    if (!name || !email || !phone || !location || typeof name !== "string" || typeof email !== "string" || typeof phone !== "string" || typeof location !== "string") {
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
     }
 
@@ -28,6 +21,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   phone: string;
   course?: string;
   city: string;
+  state?: string;
+  qualification?: string;
   createdAt: Date;
   source?: string;
 };
@@ -39,9 +34,11 @@ const enquiries = await getCollection<EnquiryDoc>("enquiries");
       email,
       phone,
       course,
-      city,
+      city: location,
+      state,
+      qualification,
       createdAt: new Date(),
-      source: req.headers.get("referer") ?? "amity-online",
+      source: source ?? req.headers.get("referer") ?? "amity-online",
     });
 
     return NextResponse.json({ ok: true }, { status: 201 });

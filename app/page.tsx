@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 // ── Types ──────────────────────────────────────────────
@@ -54,7 +54,8 @@ interface FormState {
   email: string;
   phone: string;
   course: string;
-  city: string;
+  state: string;
+  qualification: string;
 }
 
 // ── Data ──
@@ -205,7 +206,7 @@ const testimonials: Testimonial[] = [
 const accreditations = [
   {
     img: "/qs.png",
-    text: "India's only Online MBA ranked by QS: Asia Pacific Top 10",
+    text: "India&apos;s only Online MBA ranked by QS: Asia Pacific Top 10",
   },
   {
     img: "/UGC.webp",
@@ -229,7 +230,7 @@ const formFields: FormField[] = [
   { placeholder: "Full Name *", key: "name", type: "text" },
   { placeholder: "Email Address *", key: "email", type: "email" },
   { placeholder: "Phone Number *", key: "phone", type: "tel" },
-  { placeholder: "City / State *", key: "city", type: "text" },
+  { placeholder: "City / State *", key: "state", type: "text" },
 ];
 
 // ── Component ──────────────────────────────────────────
@@ -240,11 +241,13 @@ export default function AmityOnlinePage(): React.ReactElement {
     email: "",
     phone: "",
     course: "",
-    city: "",
+    state: "",
+    qualification: "",
   });
   const [showEnquiry, setShowEnquiry] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [submitResult, setSubmitResult] = useState<string>("");
+  const [enquirySource, setEnquirySource] = useState<string | null>(null);
 
   const handleFaqToggle = (index: number): void => {
     setOpenFaq(openFaq === index ? null : index);
@@ -264,8 +267,24 @@ export default function AmityOnlinePage(): React.ReactElement {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (!form.name || !form.email || !form.phone || !form.city) {
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const phone = form.phone.trim();
+    const course = form.course.trim();
+    const state = form.state.trim();
+    const qualification = form.qualification.trim();
+
+    if (!name || !email || !phone || !course || !state || !qualification) {
       setSubmitResult("Please fill all required fields.");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubmitResult("Please enter a valid email address.");
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      setSubmitResult("Please enter a valid 10-digit phone number.");
       return;
     }
     try {
@@ -274,20 +293,41 @@ export default function AmityOnlinePage(): React.ReactElement {
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name,
+          email,
+          phone: `+91 ${phone}`,
+          course,
+          state,
+          city: state,
+          qualification,
+          source: enquirySource ?? undefined,
+        }),
       });
       if (!res.ok) {
         throw new Error("Failed to submit");
       }
-      setSubmitResult("Submitted successfully!");
-      setForm({ name: "", email: "", phone: "", course: "", city: "" });
-      setShowEnquiry(false);
+      if (typeof window !== "undefined") {
+        window.location.href = "/welcome";
+      }
     } catch {
       setSubmitResult("Submission failed. Try again.");
     } finally {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    const handler = (e: Event): void => {
+      const ce = e as CustomEvent<{ source?: string }>;
+      setEnquirySource(ce.detail?.source ?? null);
+      handleOpenEnquiry();
+    };
+    window.addEventListener("open-enquiry", handler as EventListener);
+    return () => {
+      window.removeEventListener("open-enquiry", handler as EventListener);
+    };
+  }, []);
 
   return (
     <div
@@ -370,49 +410,92 @@ export default function AmityOnlinePage(): React.ReactElement {
         Get free counselling in just a few steps
       </p>
 
-      <div className="space-y-3">
-        {formFields.map((f) => (
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input
-            key={f.key}
-            type={f.type}
-            placeholder={f.placeholder}
-            value={form[f.key]}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleFormChange(f.key, e.target.value)
-            }
+            type="text"
+            placeholder="Enter your full name"
+            value={form.name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("name", e.target.value)}
             className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
-        ))}
-
+          <div className="flex w-full">
+            <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">
+              +91
+            </span>
+            <input
+              type="tel"
+              placeholder="Enter your no."
+              value={form.phone}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("phone", e.target.value)}
+              className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <input
+            type="email"
+            placeholder="abc@xyz.com"
+            value={form.email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("email", e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+          <select
+            value={form.course}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("course", e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+          >
+            <option value="">Select Course</option>
+            <option>MBA</option>
+            <option>BCA</option>
+            <option>BBA</option>
+            <option>MCA</option>
+            <option>B.Com</option>
+            <option>M.Com</option>
+          </select>
+        </div>
         <select
-          value={form.course}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            handleFormChange("course", e.target.value)
-          }
-          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-500"
+          value={form.state}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("state", e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
         >
-          <option value="">Select Course *</option>
-          <option>MBA</option>
-          <option>BCA</option>
-          <option>BBA</option>
-          <option>MCA</option>
-          <option>B.Com</option>
-          <option>M.Com</option>
+          <option value="">Select Your State</option>
+          <option>Delhi</option>
+          <option>Uttar Pradesh</option>
+          <option>Maharashtra</option>
+          <option>Karnataka</option>
+          <option>West Bengal</option>
+          <option>Gujarat</option>
+          <option>Tamil Nadu</option>
+          <option>Rajasthan</option>
+          <option>Madhya Pradesh</option>
+          <option>Bihar</option>
+          <option>Punjab</option>
+          <option>Haryana</option>
+          <option>Kerala</option>
+          <option>Telangana</option>
+          <option>Andhra Pradesh</option>
         </select>
-
+        <select
+          value={form.qualification}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("qualification", e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+        >
+          <option value="">Select Your Highest Qualification</option>
+          <option>12th Pass</option>
+          <option>Diploma</option>
+          <option>Bachelor&apos;s</option>
+          <option>Master&apos;s</option>
+          <option>PhD</option>
+        </select>
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-all text-sm shadow-md disabled:opacity-60"
+          className="w-full bg-gray-300 text-gray-700 font-bold py-3 rounded-full transition-all text-sm shadow-md disabled:opacity-60 hover:bg-gray-400"
         >
-          APPLY NOW →
+          APPLY NOW
         </button>
-
-        {submitResult && (
-          <div className="text-xs mt-2 text-center text-blue-900">
-            {submitResult}
-          </div>
-        )}
+        {submitResult && <div className="text-xs mt-2 text-center text-blue-900">{submitResult}</div>}
       </div>
     </div>
 
@@ -424,7 +507,7 @@ export default function AmityOnlinePage(): React.ReactElement {
      <section className="bg-white py-10">
   <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
-    {stats.map((s: any, i: number) => (
+    {stats.map((s: Stat, i: number) => (
       <div
         key={s.value}
         className={`
@@ -634,7 +717,7 @@ export default function AmityOnlinePage(): React.ReactElement {
             {/* TEXT */}
             <div className="md:w-2/3 w-full p-6 md:p-10 flex flex-col justify-center text-center md:text-left">
               <p className="text-gray-700 leading-relaxed mb-6 text-sm md:text-base italic">
-                "{t.text}"
+                {t.text}
               </p>
 
               <div>
@@ -747,40 +830,88 @@ export default function AmityOnlinePage(): React.ReactElement {
               <h3 className="text-blue-900 font-bold text-xl">Enquiry Form</h3>
               <button onClick={handleCloseEnquiry} className="text-blue-900 font-bold text-lg">×</button>
             </div>
-            <div className="space-y-3">
-              {formFields.map((f) => (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <input
-                  key={f.key}
-                  type={f.type}
-                  placeholder={f.placeholder}
-                  value={form[f.key]}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleFormChange(f.key, e.target.value)
-                  }
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={form.name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("name", e.target.value)}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
-              ))}
+                <div className="flex w-full">
+                  <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">
+                    +91
+                  </span>
+                  <input
+                    type="tel"
+                    placeholder="Enter your no."
+                    value={form.phone}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("phone", e.target.value)}
+                    className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input
+                  type="email"
+                  placeholder="abc@xyz.com"
+                  value={form.email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFormChange("email", e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+                <select
+                  value={form.course}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("course", e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+                >
+                  <option value="">Select Course</option>
+                  <option>MBA</option>
+                  <option>BCA</option>
+                  <option>BBA</option>
+                  <option>MCA</option>
+                  <option>B.Com</option>
+                  <option>M.Com</option>
+                </select>
+              </div>
               <select
-                value={form.course}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  handleFormChange("course", e.target.value)
-                }
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-500"
+                value={form.state}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("state", e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
               >
-                <option value="">Select Course *</option>
-                <option>MBA</option>
-                <option>BCA</option>
-                <option>BBA</option>
-                <option>MCA</option>
-                <option>B.Com</option>
-                <option>M.Com</option>
+                <option value="">Select Your State</option>
+                <option>Delhi</option>
+                <option>Uttar Pradesh</option>
+                <option>Maharashtra</option>
+                <option>Karnataka</option>
+                <option>West Bengal</option>
+                <option>Gujarat</option>
+                <option>Tamil Nadu</option>
+                <option>Rajasthan</option>
+                <option>Madhya Pradesh</option>
+                <option>Bihar</option>
+                <option>Punjab</option>
+                <option>Haryana</option>
+                <option>Kerala</option>
+                <option>Telangana</option>
+                <option>Andhra Pradesh</option>
               </select>
-              <button onClick={handleSubmit} disabled={submitting} className="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-all text-sm shadow-md disabled:opacity-60">
-                Submit →
+              <select
+                value={form.qualification}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFormChange("qualification", e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+              >
+                <option value="">Select Your Highest Qualification</option>
+                <option>12th Pass</option>
+                <option>Diploma</option>
+                <option>Bachelor&apos;s</option>
+                <option>Master&apos;s</option>
+                <option>PhD</option>
+              </select>
+              <button onClick={handleSubmit} disabled={submitting} className="w-full bg-gray-300 text-gray-700 font-bold py-3 rounded-full transition-all text-sm shadow-md disabled:opacity-60 hover:bg-gray-400">
+                APPLY NOW
               </button>
-              {submitResult && (
-                <div className="text-xs mt-2 text-center text-blue-900">{submitResult}</div>
-              )}
+              {submitResult && <div className="text-xs mt-2 text-center text-blue-900">{submitResult}</div>}
             </div>
           </div>
         </div>
