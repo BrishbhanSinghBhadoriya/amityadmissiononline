@@ -1,9 +1,10 @@
 import { MongoClient, Db, Collection, Document as MongoDocument } from "mongodb";
 
-const uri = process.env.MONGO_URI as string;
+const uri = (process.env.MONGO_URI || process.env.MONGODB_URI) as string;
+const dbName = process.env.DB_NAME ?? process.env.MONGO_DB_NAME;
 
 if (!uri) {
-  throw new Error("Missing MONGO_URI environment variable");
+  throw new Error("Missing MONGO_URI/MONGODB_URI environment variable");
 }
 
 let cachedClient: MongoClient | null = null;
@@ -17,7 +18,7 @@ export async function getDb(): Promise<Db> {
   const client = new MongoClient(uri);
   await client.connect();
 
-  const db = client.db();
+  const db = dbName ? client.db(dbName) : client.db();
 
   cachedClient = client;
   cachedDb = db;
@@ -30,4 +31,5 @@ export async function getCollection<T extends MongoDocument = MongoDocument>(
 ): Promise<Collection<T>> {
   const db = await getDb();
   return db.collection<T>(name);
+  
 }

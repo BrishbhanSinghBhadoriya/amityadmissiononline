@@ -1,9 +1,18 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function WelcomePage(): React.ReactElement {
   const callNumber = "+917042646766";
   const whatsappNumber = "917042646766";
+
+  // ✅ Google Ads Conversion Fire
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+      (window as any).gtag("event", "conversion", {
+        send_to: "AW-17973395671/gCapCIj1-YAcENeBsfpC",
+      });
+    }
+  }, []);
 
   const handleCall = (): void => {
     if (typeof window !== "undefined") {
