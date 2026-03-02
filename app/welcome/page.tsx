@@ -6,21 +6,24 @@ export default function WelcomePage(): React.ReactElement {
   const whatsappNumber = "917042646766";
 
   useEffect(() => {
+    //  Meta Pixel — Lead Event
+    if (typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "LeadNew");
+    }
+
+    //  Google Ads — Conversion Event
     let attempts = 0;
-    const maxAttempts = 20; // try for up to 2 seconds
+    const maxAttempts = 20;
 
     const fireConversion = () => {
       if (typeof (window as any).gtag === "function") {
-        // ✅ gtag is ready — fire conversion
         (window as any).gtag("event", "conversion", {
           send_to: "AW-17973395671/gCapCIj1-YAcENeBsfpC",
         });
       } else if (attempts < maxAttempts) {
-        // ⏳ Not ready yet — retry after 100ms
         attempts++;
         setTimeout(fireConversion, 100);
       } else {
-        // 🛟 Final fallback — push to dataLayer directly
         (window as any).dataLayer = (window as any).dataLayer || [];
         (window as any).dataLayer.push({
           event: "conversion",
