@@ -170,9 +170,39 @@ export default function AmityOnlinePage(): React.ReactElement {
     return () => window.removeEventListener("open-enquiry", handler as EventListener);
   }, []);
 
-  const stateOptions = ["Delhi","Uttar Pradesh","Maharashtra","Karnataka","West Bengal","Gujarat","Tamil Nadu","Rajasthan","Madhya Pradesh","Bihar","Punjab","Haryana","Kerala","Telangana","Andhra Pradesh"];
-  const courseOptions = ["MBA","BCA","BBA","MCA","B.Com","M.Com"];
-  const qualOptions = ["12th Pass","Diploma","Bachelor's","Master's","PhD"];
+  const stateOptions = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal"
+];
+  const courseOptions = ["MBA","MCA","MCom","MA","BBA","BCA","BCom","BA"];
+  const qualOptions = ["12th Pass","Diploma","Graduate","Post Graduate","Doctorate"];
 
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
@@ -181,13 +211,32 @@ export default function AmityOnlinePage(): React.ReactElement {
       {submitting && <SubmittingOverlay />}
 
       {/* ── NAVBAR ── */}
-      <nav className="bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 rounded-b-2xl shadow-md border-b-2 border-yellow-400">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Image src="/amity_logo.png" alt="Amity Online" width={140} height={40} className="object-contain" priority />
-          <button onClick={handleOpenEnquiry} className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-5 py-2 rounded-full text-sm transition-all shadow-md">Enquire Now →</button>
-        </div>
-      </nav>
+     {/* ── NAVBAR ── */}
+<nav className="bg-[#0B1E3A] rounded-b-2xl shadow-md">
+  <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <Image
+      src="/amity_logo.png"
+      alt="Amity Online"
+      width={140}
+      height={40}
+      className="object-contain"
+      priority
+    />
 
+    <button
+      onClick={handleOpenEnquiry}
+      className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-5 py-2 rounded-full text-sm transition-all shadow-md"
+    >
+      Enquire Now →
+    </button>
+  </div>
+
+  {/* Yellow line below navbar */}
+ 
+</nav>
+
+
+ <div className="h-[40px] bg-yellow-400 rounded-md mt-[12px] mx-4"></div>
       {/* ── HERO ── */}
       <section className="relative bg-white overflow-hidden">
         <img src="/amity_frame.png" alt="Frame" className="hidden md:block absolute inset-0 w-full h-full object-contain pointer-events-none" />
@@ -202,37 +251,124 @@ export default function AmityOnlinePage(): React.ReactElement {
             </div>
           </div>
 
-          {/* HERO FORM */}
-          <div className="bg-white rounded-2xl p-5 shadow-xl text-gray-800 max-w-md w-full ml-auto">
-            <h3 className="text-blue-900 font-bold text-xl mb-1">Connect With Our Experts</h3>
-            <p className="text-gray-500 text-sm mb-4">Get free counselling in just a few steps</p>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input type="text" placeholder="Enter your full name" value={form.name} onChange={(e) => handleFormChange("name", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                <div className="flex w-full">
-                  <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">+91</span>
-                  <input type="tel" placeholder="Enter your no." value={form.phone} onChange={(e) => handleFormChange("phone", e.target.value)} className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input type="email" placeholder="abc@xyz.com" value={form.email} onChange={(e) => handleFormChange("email", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                <select value={form.course} onChange={(e) => handleFormChange("course", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                  <option value="">Select Course</option>
-                  {courseOptions.map(c => <option key={c}>{c}</option>)}
-                </select>
-              </div>
-              <select value={form.state} onChange={(e) => handleFormChange("state", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                <option value="">Select Your State</option>
-                {stateOptions.map(s => <option key={s}>{s}</option>)}
-              </select>
-              <select value={form.qualification} onChange={(e) => handleFormChange("qualification", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                <option value="">Select Your Highest Qualification</option>
-                {qualOptions.map(q => <option key={q}>{q}</option>)}
-              </select>
-              <SubmitButton submitting={submitting} onClick={handleSubmit} />
-              {submitResult && <div className="text-xs mt-2 text-center text-blue-900">{submitResult}</div>}
-            </div>
-          </div>
+        <div className="bg-white rounded-2xl p-5 shadow-xl text-gray-800 max-w-md w-full ml-auto">
+  <h3 className="text-blue-900 font-bold text-xl mb-1">
+    Connect With Our Experts
+  </h3>
+  <p className="text-gray-500 text-sm mb-4">
+    Get free counselling in just a few steps
+  </p>
+
+  <div className="space-y-4">
+
+    {/* Name + Phone */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      
+      <div>
+        <label className="block text-sm font-semibold mb-1">
+        Full Name <span className="text-[#0B1E3A]">*</span>
+        </label>
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => handleFormChange("name", e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="text-[#0B1E3A] text-sm font-semibold mb-1">
+          Phone Number <span className="text-[#0B1E3A]">*</span>
+        </label>
+        <div className="flex w-full">
+          <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">
+            +91
+          </span>
+          <input
+            type="tel"
+            value={form.phone}
+            onChange={(e) => handleFormChange("phone", e.target.value)}
+            className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Email + Course */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      
+      <div>
+        <label className="block text-sm font-semibold mb-1">
+          Email Id <span className="text-[#0B1E3A]">*</span>
+        </label>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => handleFormChange("email", e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold mb-1">
+          Select Course <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={form.course}
+          onChange={(e) => handleFormChange("course", e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+        >
+          <option value="">Select Course</option>
+          {courseOptions.map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    {/* State */}
+    <div>
+      <label className="block text-sm font-semibold mb-1">
+       Select your State <span className="text-[#0B1E3A]">*</span>
+      </label>
+      <select
+        value={form.state}
+        onChange={(e) => handleFormChange("state", e.target.value)}
+        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+      >
+        <option value="">Select Your State</option>
+        {stateOptions.map((s) => (
+          <option key={s}>{s}</option>
+        ))}
+      </select>
+    </div>
+
+    {/* Qualification */}
+    <div>
+      <label className="block text-sm font-semibold mb-1">
+        Select Your Highest Qualification <span className="text-[#0B1E3A]">*</span>
+      </label>
+      <select
+        value={form.qualification}
+        onChange={(e) => handleFormChange("qualification", e.target.value)}
+        className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+      >
+        <option value="">Select Your Highest Qualification</option>
+        {qualOptions.map((q) => (
+          <option key={q}>{q}</option>
+        ))}
+      </select>
+    </div>
+
+    <SubmitButton submitting={submitting} onClick={handleSubmit} />
+
+    {submitResult && (
+      <div className="text-xs mt-2 text-center text-blue-900">
+        {submitResult}
+      </div>
+    )}
+  </div>
+</div>
         </div>
       </section>
 
@@ -391,42 +527,143 @@ export default function AmityOnlinePage(): React.ReactElement {
       </footer>
 
       {/* ── ENQUIRY MODAL ── */}
-      {showEnquiry && (
-        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-blue-900 font-bold text-xl">Enquiry Form</h3>
-              <button onClick={handleCloseEnquiry} className="text-blue-900 font-bold text-lg">×</button>
-            </div>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input type="text" placeholder="Enter your full name" value={form.name} onChange={(e) => handleFormChange("name", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                <div className="flex w-full">
-                  <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">+91</span>
-                  <input type="tel" placeholder="Enter your no." value={form.phone} onChange={(e) => handleFormChange("phone", e.target.value)} className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <input type="email" placeholder="abc@xyz.com" value={form.email} onChange={(e) => handleFormChange("email", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
-                <select value={form.course} onChange={(e) => handleFormChange("course", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                  <option value="">Select Course</option>
-                  {courseOptions.map(c => <option key={c}>{c}</option>)}
-                </select>
-              </div>
-              <select value={form.state} onChange={(e) => handleFormChange("state", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                <option value="">Select Your State</option>
-                {stateOptions.map(s => <option key={s}>{s}</option>)}
-              </select>
-              <select value={form.qualification} onChange={(e) => handleFormChange("qualification", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600">
-                <option value="">Select Your Highest Qualification</option>
-                {qualOptions.map(q => <option key={q}>{q}</option>)}
-              </select>
-              <SubmitButton submitting={submitting} onClick={handleSubmit} />
-              {submitResult && <div className="text-xs mt-2 text-center text-blue-900">{submitResult}</div>}
+     {/* ── ENQUIRY MODAL ── */}
+{showEnquiry && (
+  <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+    <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-blue-900 font-bold text-xl">
+          Connect With Our Experts
+        </h3>
+        <button
+          onClick={handleCloseEnquiry}
+          className="text-blue-900 font-bold text-lg"
+        >
+          ×
+        </button>
+      </div>
+
+      <p className="text-gray-500 text-sm mb-4">
+        Get free counselling in just a few steps
+      </p>
+
+      <div className="space-y-4">
+
+        {/* Name + Phone */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Full Name <span className="text-[#0B1E3A]">*</span>
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => handleFormChange("name", e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Phone Number <span className="text-[#0B1E3A]">*</span>
+            </label>
+            <div className="flex w-full">
+              <span className="inline-flex items-center px-3 border border-r-0 border-gray-200 rounded-l-lg text-sm text-gray-600 bg-gray-50">
+                +91
+              </span>
+              <input
+                type="tel"
+                value={form.phone}
+                onChange={(e) => handleFormChange("phone", e.target.value)}
+                className="w-full border border-gray-200 rounded-r-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
             </div>
           </div>
+
         </div>
-      )}
+
+        {/* Email + Course */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Email Id <span className="text-[#0B1E3A]">*</span>
+            </label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => handleFormChange("email", e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Select Course <span className="text-[#0B1E3A]">*</span>
+            </label>
+            <select
+              value={form.course}
+              onChange={(e) => handleFormChange("course", e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+            >
+              <option value="">Select Course</option>
+              {courseOptions.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+
+        {/* State */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Select your State <span className="text-[#0B1E3A]">*</span>
+          </label>
+          <select
+            value={form.state}
+            onChange={(e) => handleFormChange("state", e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+          >
+            <option value="">Select Your State</option>
+            {stateOptions.map((s) => (
+              <option key={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Qualification */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">
+            Select Your Highest Qualification <span className="text-[#0B1E3A]">*</span>
+          </label>
+          <select
+            value={form.qualification}
+            onChange={(e) => handleFormChange("qualification", e.target.value)}
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 text-gray-600"
+          >
+            <option value="">Select Your Highest Qualification</option>
+            {qualOptions.map((q) => (
+              <option key={q}>{q}</option>
+            ))}
+          </select>
+        </div>
+
+        <SubmitButton submitting={submitting} onClick={handleSubmit} />
+
+        {submitResult && (
+          <div className="text-xs mt-2 text-center text-blue-900">
+            {submitResult}
+          </div>
+        )}
+
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

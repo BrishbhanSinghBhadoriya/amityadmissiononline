@@ -1,3 +1,4 @@
+// layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -27,20 +28,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
-      >
-        {children}
-
-        <StickyContact />
-
-      
+      <head>
+        {/* ✅ Load gtag BEFORE page renders — eliminates race condition */}
         <Script
-          async
           src="https://www.googletagmanager.com/gtag/js?id=AW-17973395671"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
-        <Script id="google-ads-init" strategy="afterInteractive">
+        <Script id="google-ads-init" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -48,7 +42,12 @@ export default function RootLayout({
             gtag('config', 'AW-17973395671');
           `}
         </Script>
-
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
+      >
+        {children}
+        <StickyContact />
       </body>
     </html>
   );
