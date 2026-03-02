@@ -311,7 +311,7 @@ export default function AmityOnlinePage(): React.ReactElement {
 
       <div>
         <label className="block text-sm font-semibold mb-1">
-          Select Course <span className="text-red-500">*</span>
+          Select Course <span className="text-[#0B1E3A]">*</span>
         </label>
         <select
           value={form.course}
