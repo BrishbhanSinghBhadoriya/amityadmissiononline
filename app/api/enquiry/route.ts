@@ -27,9 +27,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   source?: string;
 };
 
-const enquiries = await getCollection<EnquiryDoc>("enquiries");
+    const enquiries = await getCollection<EnquiryDoc>("enquiries");
 
-    await enquiries.insertOne({
+    const enquiryData = {
       name,
       email,
       phone,
@@ -39,7 +39,36 @@ const enquiries = await getCollection<EnquiryDoc>("enquiries");
       qualification,
       createdAt: new Date(),
       source: source ?? req.headers.get("referer") ?? "amity-online",
-    });
+    };
+
+    // Save to MongoDB
+    await enquiries.insertOne(enquiryData);
+
+    // Save to CRM (NeoDove)
+    const CRM_ENDPOINT = process.env.API_ENDPOINT;
+    if (CRM_ENDPOINT) {
+      try {
+        await fetch(CRM_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: enquiryData.name,
+            email: enquiryData.email,
+            phone: enquiryData.phone,
+            course: enquiryData.course,
+            city: enquiryData.city,
+            state: enquiryData.state,
+            qualification: enquiryData.qualification,
+            source: enquiryData.source,
+          }),
+        });
+      } catch (crmErr) {
+        console.error("CRM Error:", crmErr);
+        // We don't fail the request if CRM fails, as MongoDB save was successful
+      }
+    }
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
