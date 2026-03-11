@@ -7,7 +7,8 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
-    const { name, email, phone, course, city, state, qualification, source } = body ?? {};
+
+    const { name, email, phone, course, city, state, qualification, source, campaign, university } = body ?? {};
 
     const location: string | undefined = typeof city === "string" ? city : typeof state === "string" ? state : undefined;
 
@@ -15,17 +16,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
     }
 
-  type EnquiryDoc = Document & {
-  name: string;
-  email: string;
-  phone: string;
-  course?: string;
-  city: string;
-  state?: string;
-  qualification?: string;
-  createdAt: Date;
-  source?: string;
-};
+    type EnquiryDoc = Document & {
+      name: string;
+      email: string;
+      phone: string;
+      course?: string;
+      city: string;
+      state?: string;
+      qualification?: string;
+      createdAt: Date;
+      source?: string;
+      campaign?: string;
+      university?: string;
+    };
 
     const enquiries = await getCollection<EnquiryDoc>("enquiries");
 
@@ -39,6 +42,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       qualification,
       createdAt: new Date(),
       source: source ?? req.headers.get("referer") ?? "amity-online",
+      campaign: campaign ?? undefined,
+      university: typeof university === "string" ? university : undefined,
     };
 
     // Save to MongoDB
@@ -62,6 +67,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             state: enquiryData.state,
             qualification: enquiryData.qualification,
             source: enquiryData.source,
+            campaign: enquiryData.campaign,
+            university: enquiryData.university,
           }),
         });
       } catch (crmErr) {

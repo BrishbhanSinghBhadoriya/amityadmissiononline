@@ -126,7 +126,7 @@ export default function AmityOnlinePage(): React.ReactElement {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [submitResult, setSubmitResult] = useState<string>("");
   const [enquirySource, setEnquirySource] = useState<string | null>(null);
-
+  const [enquiryCampaign, setEnquiryCampaign] = useState<string | null>(null);
   const handleFaqToggle = (i: number) => setOpenFaq(openFaq === i ? null : i);
   const handleFormChange = (key: keyof FormState, value: string) => setForm((prev) => ({ ...prev, [key]: value }));
   const handleOpenEnquiry = () => { setShowEnquiry(true); setSubmitResult(""); };
@@ -149,7 +149,7 @@ export default function AmityOnlinePage(): React.ReactElement {
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: `+91 ${phone.trim()}`, course: course.trim(), state: state.trim(), city: state.trim(), qualification: qualification.trim(), source: enquirySource ?? undefined }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: `+91 ${phone.trim()}`, course: course.trim(), state: state.trim(), city: state.trim(), qualification: qualification.trim(), source: enquirySource ?? (typeof window !== "undefined" ? window.location.href : ""), campaign: enquiryCampaign ?? "Google_Search", university: "Amity University Online" }),
       });
       if (!res.ok) throw new Error("Failed to submit");
       if (typeof window !== "undefined") window.location.href = "/welcome";
@@ -161,9 +161,16 @@ export default function AmityOnlinePage(): React.ReactElement {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEnquirySource(window.location.href);
+    }
+  }, []);
+
+  useEffect(() => {
     const handler = (e: Event) => {
-      const ce = e as CustomEvent<{ source?: string }>;
-      setEnquirySource(ce.detail?.source ?? null);
+     const ce = e as CustomEvent<{ source?: string; campaign?: string }>;
+     setEnquirySource(ce.detail?.source ?? (typeof window !== "undefined" ? window.location.href : ""));
+     setEnquiryCampaign(ce.detail?.campaign ?? "Google_Search"); // default campaign
       handleOpenEnquiry();
     };
     window.addEventListener("open-enquiry", handler as EventListener);

@@ -119,13 +119,15 @@ function SubmitButton({ submitting, onClick }: { submitting: boolean; onClick: (
 }
 
 // ── Main Component ────────────────────────────────────────────
-export default function AmityOnlinePage(): React.ReactElement {
+export default function AmityOnlinePageMeta(): React.ReactElement {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [form, setForm] = useState<FormState>({ name: "", email: "", phone: "", course: "", state: "", qualification: "" });
   const [showEnquiry, setShowEnquiry] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [submitResult, setSubmitResult] = useState<string>("");
-  const [enquirySource, setEnquirySource] = useState<string | null>(null);
+
+  const [enquirySource, setEnquirySource] = useState<string>("");
+  const [enquiryCampaign, setEnquiryCampaign] = useState<string>("Meta_Search");
 
   const handleFaqToggle = (i: number) => setOpenFaq(openFaq === i ? null : i);
   const handleFormChange = (key: keyof FormState, value: string) => setForm((prev) => ({ ...prev, [key]: value }));
@@ -149,7 +151,19 @@ export default function AmityOnlinePage(): React.ReactElement {
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: `+91 ${phone.trim()}`, course: course.trim(), state: state.trim(), city: state.trim(), qualification: qualification.trim(), source: enquirySource ?? undefined }),
+        // ✅ CHANGE 2: source aur campaign dono fetch body mein add kiye
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: `+91 ${phone.trim()}`,
+          course: course.trim(),
+          state: state.trim(),
+          city: state.trim(),
+          qualification: qualification.trim(),
+          source: enquirySource,
+          campaign: enquiryCampaign,
+          university: "Amity University Online",
+        }),
       });
       if (!res.ok) throw new Error("Failed to submit");
       if (typeof window !== "undefined") window.location.href = "/welcome";
@@ -161,9 +175,16 @@ export default function AmityOnlinePage(): React.ReactElement {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEnquirySource(window.location.href);
+    }
+  }, []);
+
+  useEffect(() => {
     const handler = (e: Event) => {
-      const ce = e as CustomEvent<{ source?: string }>;
-      setEnquirySource(ce.detail?.source ?? null);
+      const ce = e as CustomEvent<{ source?: string; campaign?: string }>;
+      setEnquirySource(ce.detail?.source ?? (typeof window !== "undefined" ? window.location.href : ""));
+      setEnquiryCampaign(ce.detail?.campaign ?? "Meta_Search");
       handleOpenEnquiry();
     };
     window.addEventListener("open-enquiry", handler as EventListener);
@@ -211,7 +232,6 @@ export default function AmityOnlinePage(): React.ReactElement {
       {submitting && <SubmittingOverlay />}
 
       {/* ── NAVBAR ── */}
-     {/* ── NAVBAR ── */}
 <nav className="bg-[#0B1E3A] rounded-b-2xl shadow-md">
   <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
     <Image
@@ -230,11 +250,7 @@ export default function AmityOnlinePage(): React.ReactElement {
       Enquire Now →
     </button>
   </div>
-
-  {/* Yellow line below navbar */}
- 
 </nav>
-
 
  <div className="h-[40px] bg-yellow-400 rounded-md mt-[12px] mx-4"></div>
       {/* ── HERO ── */}
@@ -527,7 +543,6 @@ export default function AmityOnlinePage(): React.ReactElement {
       </footer>
 
       {/* ── ENQUIRY MODAL ── */}
-     {/* ── ENQUIRY MODAL ── */}
 {showEnquiry && (
   <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
     <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
