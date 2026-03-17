@@ -107,6 +107,13 @@ export const metadata: Metadata = {
     },
   },
 
+  // ── Google Search Console Ownership Verification ──────────────────────────
+  // Replace the value below with the code from:
+  // Search Console → Settings → Ownership Verification → HTML tag → content="..."
+  verification: {
+    google: "n4y9pNxbIdiZovCog5loXpvLA2Q3aUn5FaoD3_cpt5s",
+  },
+
   authors: [{ name: "Degree University" }],
   publisher: "Degree University",
   formatDetection: {
