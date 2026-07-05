@@ -7,22 +7,6 @@ export default function WelcomePage(): React.ReactElement {
   const whatsappNumber = "917042646766";
 
   useEffect(() => {
-    // ✅ Meta Pixel — LeadNew Event (WITH RETRY)
-    let metaAttempts = 0;
-
-    const fireMetaLead = () => {
-      if (typeof (window as any).fbq === "function") {
-        console.log("✅ Meta Pixel - LeadNew event fired!");
-        (window as any).fbq("track", "LeadNew");
-      } else if (metaAttempts < 20) {
-        metaAttempts++;
-        console.log(`⏳ Meta Pixel loading... attempt ${metaAttempts}`);
-        setTimeout(fireMetaLead, 100);
-      }
-    };
-
-    fireMetaLead();
-
     // ✅ Google Ads — Conversion Event
     let attempts = 0;
     const maxAttempts = 20;
