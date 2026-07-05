@@ -239,6 +239,7 @@ export default function AmityOnlinePageMeta(): React.ReactElement {
       alt="Amity Online"
       width={140}
       height={40}
+      style={{ width: "auto", height: "40px" }}
       className="object-contain"
       priority
     />

@@ -7,13 +7,13 @@ export default function WelcomePage(): React.ReactElement {
   const whatsappNumber = "917042646766";
 
   useEffect(() => {
-    // ✅ Meta Pixel — Lead Event (WITH RETRY)
+    // ✅ Meta Pixel — LeadNew Event (WITH RETRY)
     let metaAttempts = 0;
 
     const fireMetaLead = () => {
       if (typeof (window as any).fbq === "function") {
-        console.log("✅ Meta Pixel - Lead event fired!");
-        (window as any).fbq("track", "Lead");
+        console.log("✅ Meta Pixel - LeadNew event fired!");
+        (window as any).fbq("track", "LeadNew");
       } else if (metaAttempts < 20) {
         metaAttempts++;
         console.log(`⏳ Meta Pixel loading... attempt ${metaAttempts}`);
@@ -65,16 +65,7 @@ export default function WelcomePage(): React.ReactElement {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1230848505368304');
-            fbq('track', 'PageView');
+            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '1230848505368304');fbq('track', 'PageView');fbq('track', 'LeadNew');
           `
         }}
       />

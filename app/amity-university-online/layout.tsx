@@ -104,6 +104,16 @@ export const metadata: Metadata = {
 };
 
 // ─── Schema: Organization ─────────────────────────────────────────────────────
+// NOTE: aggregateRating removed. Google penalizes AggregateRating/Review markup
+// that isn't backed by a verifiable, crawlable review source (e.g. Google
+// Business Profile, Trustpilot with matching review count). Adding a fake or
+// unverifiable "4.8 / 1600 reviews" block risks a manual action / rich-result
+// suppression. Re-add ONLY if you have real, linkable reviews to back it up:
+//
+// aggregateRating: {
+//   "@type": "AggregateRating",
+//   ratingValue: "4.8", reviewCount: "1600", bestRating: "5", worstRating: "1",
+// },
 const organizationSchema = {
   "@context":    "https://schema.org",
   "@type":       "EducationalOrganization",
@@ -124,11 +134,6 @@ const organizationSchema = {
     "https://www.linkedin.com/school/amity-university-online/",
     "https://x.com/AmityUniversity",
   ],
-  // Star ratings in SERP — lifts CTR for education landing pages
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.8", reviewCount: "1600", bestRating: "5", worstRating: "1",
-  },
 };
 
 // ─── Schema: Landing Page ─────────────────────────────────────────────────────
@@ -184,32 +189,34 @@ const coursesSchema = {
 };
 
 // ─── Schema: BreadcrumbList ───────────────────────────────────────────────────
+// FIX: each breadcrumb level now has its own distinct URL (previously all
+// three pointed to the same homepage URL, which is invalid breadcrumb
+// structure and can be flagged by Google's Rich Results Test).
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type":    "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home",                    item: "https://degreeuniversity.online" },
-    { "@type": "ListItem", position: 2, name: "Amity University Online", item: "https://degreeuniversity.online" },
-    { "@type": "ListItem", position: 3, name: "Admission 2026",          item: "https://degreeuniversity.online" },
+    { "@type": "ListItem", position: 2, name: "Amity University Online", item: "https://degreeuniversity.online/amity-university-online" },
   ],
 };
+
+// Pre-stringify at module level so server and client use the exact same string,
+// preventing dangerouslySetInnerHTML hydration mismatches.
+const organizationSchemaJSON = JSON.stringify(organizationSchema);
+const landingPageSchemaJSON  = JSON.stringify(landingPageSchema);
+const faqSchemaJSON          = JSON.stringify(faqSchema);
+const coursesSchemaJSON      = JSON.stringify(coursesSchema);
+const breadcrumbSchemaJSON   = JSON.stringify(breadcrumbSchema);
 
 // ─── Root Layout ──────────────────────────────────────────────────────────────
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN">
-      <head>
+    <html lang="en-IN" suppressHydrationWarning>
+      <head suppressHydrationWarning>
 
         {/* ── Sitemap ───────────────────────────────────────────────────── */}
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-
-        {/* ── LCP Preload (mobile 400px / desktop 800px) ────────────────── */}
-        <link rel="preload" as="image" type="image/webp" media="(max-width: 768px)"
-          href="https://res.cloudinary.com/didkrwhbu/image/upload/w_400,q_auto,f_auto/v1762327155/girlImage_w9ulny.webp"
-        />
-        <link rel="preload" as="image" type="image/webp" media="(min-width: 769px)"
-          href="https://res.cloudinary.com/didkrwhbu/image/upload/w_800,q_auto,f_auto/v1762327155/girlImage_w9ulny.webp"
-        />
 
         {/* ── Branding & Local SEO ──────────────────────────────────────── */}
         <meta name="theme-color"    content="#0B1E3A" />
@@ -219,11 +226,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="ICBM"           content="28.5355, 77.3910" />
 
         {/* ── Structured Data (5 schemas) ───────────────────────────────── */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(landingPageSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(coursesSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        {/* FIX: suppressHydrationWarning added on EACH script tag individually.
+            The attribute set on a parent (<head>) only covers that element's
+            own attributes/text, NOT its children — so it did not actually
+            silence the mismatch warning coming from these nested <script>
+            nodes. Content itself was already safe (pre-stringified JSON),
+            this only stops the console warning from firing. */}
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: organizationSchemaJSON }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: landingPageSchemaJSON }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: faqSchemaJSON }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: coursesSchemaJSON }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: breadcrumbSchemaJSON }}
+        />
+
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
+        {children}
+        <StickyContact />
 
         {/* ════════════════════════════════════════════════════════════════
             META (FACEBOOK) PIXEL  —  ID: ${META_PIXEL_ID}
@@ -258,28 +296,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
 
-        {/* Meta Pixel noscript fallback (for JS-disabled browsers) */}
-        {/* Next.js does not allow <noscript> in <head> via Script component,    */}
-        {/* so this inline script appends the tracking pixel image at runtime.   */}
-        <script
-          id="meta-pixel-noscript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(){
-                var img=document.createElement('img');
-                img.height=1; img.width=1; img.style.display='none';
-                img.src='https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1';
-                img.alt='';
-                document.head.appendChild(img);
-              })();
-            `,
-          }}
-        />
-
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
-        {children}
-        <StickyContact />
+        {/* Meta Pixel noscript fallback — rendered client-side only to avoid hydration mismatch */}
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height={1}
+            width={1}
+            style={{ display: "none" }}
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
       </body>
     </html>
   );
