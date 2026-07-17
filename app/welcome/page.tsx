@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import Script from "next/script";
 
 export default function WelcomePage(): React.ReactElement {
-  const callNumber = "+917042646766";
-  const whatsappNumber = "917042646766";
+  const callNumber = "+916393313030";
+  const whatsappNumber = "919289681152";
 
   useEffect(() => {
     // ✅ Google Ads — Conversion Event
